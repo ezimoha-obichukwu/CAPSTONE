@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'movie_api.apps.MovieApiConfig',
-    'movie.apps.MovieConfig'
+    'movie.apps.MovieConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
