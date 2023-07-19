@@ -10,7 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from django.conf import settings
+from decouple import config
+
+# Set the environment variable manually (optional if not already set)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'CAPSTONE.settings')
+
+# Configure Django settings
+settings.configure()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*_w#1nbv+ukwf$%m13luwy-mj_unlez2k^22l_8-+ts56(j7%s'
+SECRET_KEY = config("secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +50,24 @@ INSTALLED_APPS = [
     'movie_api.apps.MovieApiConfig',
     'movie.apps.MovieConfig',
     'rest_framework',
+    'rest_framework.authtoken'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    # Other REST framework configurations...
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,12 +103,24 @@ WSGI_APPLICATION = 'CAPSTONE.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'capstone',       # Replace 'your_db_name' with the name of your PostgreSQL database
+        'USER': 'postgres',       # Replace 'your_db_user' with the PostgreSQL database user
+        'PASSWORD': config("password"),   # Replace 'your_db_password' with the password of the PostgreSQL database user
+        'HOST': 'localhost',          # Replace 'localhost' with the host where your PostgreSQL server is running
+        'PORT': '5433',                   # Leave empty to use the default PostgreSQL port (usually 5432)
     }
 }
+
 
 
 # Password validation

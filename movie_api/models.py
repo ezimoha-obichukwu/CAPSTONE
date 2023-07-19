@@ -23,8 +23,8 @@ class Movie(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=20)
     actors = models.ManyToManyField("Actor", related_name ="movies")
     description = models.TextField()
-    duration = models.PositiveIntegerField()
-    rating = models.DecimalField(max_digits=3, decimal_places=1)
+    duration = models.PositiveIntegerField(blank=True, null=True)
+    rating = models.CharField(max_length=20, blank=True, null=True)
     poster = models.ImageField(upload_to="movie_posters/")
     trailer_link = models.URLField()
 
@@ -33,7 +33,7 @@ class Movie(models.Model):
     
 class Actor(models.Model):
     name = models.CharField(max_length=100)
-    bio = models.TextField(default=True)
+    bio = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
