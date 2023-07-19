@@ -30,7 +30,7 @@ def get_external_movies(request):
 
     movies = get_movie_data(url)
 
-    for i in range(11):
+    for i in range(5):
         movie_title = movies["results"][i]["title"]
         movie_date_released = movies["results"][i]["release_date"]
         movie_description = movies["results"][i]["overview"]
