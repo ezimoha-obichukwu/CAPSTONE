@@ -10,6 +10,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 import requests
+from .utils import get_movie_data
 from django.http import HttpResponse
 
 
@@ -24,17 +25,36 @@ class MovieHomePage(ListAPIView):
     filter_backends = [SearchFilter]
     search_fields = ["title", "category", "date_released", "category"]
 
+def get_external_movies(request):
+    url = "https://api.themoviedb.org/3/movie/popular"
 
-    url = "https://api.themoviedb.org/3/person/popular?language=en-US&page=1"
+    movies = get_movie_data(url)
 
-    headers = {
-        "accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMjBjYjZlZDU2MzE0YzA5ZTNmMTczYjNiODg2NGVmMiIsInN1YiI6IjY0N2Y0MzBiMGUyOWEyMmJlMDhlYWZhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.u6I_WvuxoOx_bJrsHJXTuVHEoBKU4QdSIL3iP-DW4oc"
-    }
+    for i in range(11):
+        movie_title = movies["results"][i]["title"]
+        movie_date_released = movies["results"][i]["release_date"]
+        movie_description = movies["results"][i]["overview"]
+        movie_ratings = int(movies["results"][i]["vote_average"])
+        movie_poster = movies["results"][i]["poster_path"]
+
+        if movie_ratings > 5:
+            movie_ratings = 5
+        
+        Movie.objects.create(title=movie_title, date_released=movie_date_released, rating=movie_ratings, 
+                             description=movie_description, poster=movie_poster)
+
+        print(movie_title, movie_date_released, movie_ratings, movie_description)
+    return HttpResponse("Movies have been added")
+    # url = "https://api.themoviedb.org/3/person/popular?language=en-US&page=1"
+
+    # headers = {
+    #     "accept": "application/json",
+    #     "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMjBjYjZlZDU2MzE0YzA5ZTNmMTczYjNiODg2NGVmMiIsInN1YiI6IjY0N2Y0MzBiMGUyOWEyMmJlMDhlYWZhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.u6I_WvuxoOx_bJrsHJXTuVHEoBKU4QdSIL3iP-DW4oc"
+    # }
     
-    response = requests.get(url, headers=headers)
+    # response = requests.get(url, headers=headers)
 
-    print(response.json())
+    # print(response.json())
 
 
 

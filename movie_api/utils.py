@@ -18,20 +18,42 @@ import requests
 
 import requests
 
-url = "https://api.themoviedb.org/3/person/popular?language=en-US&page=1"
+url = "https://api.themoviedb.org/3/movie/popular"
 
-headers = {
-    "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMjBjYjZlZDU2MzE0YzA5ZTNmMTczYjNiODg2NGVmMiIsInN1YiI6IjY0N2Y0MzBiMGUyOWEyMmJlMDhlYWZhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.u6I_WvuxoOx_bJrsHJXTuVHEoBKU4QdSIL3iP-DW4oc"
-}
 
-response = requests.get(url, headers=headers)
+def get_movie_data(url):
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMjBjYjZlZDU2MzE0YzA5ZTNmMTczYjNiODg2NGVmMiIsInN1YiI6IjY0N2Y0MzBiMGUyOWEyMmJlMDhlYWZhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.u6I_WvuxoOx_bJrsHJXTuVHEoBKU4QdSIL3iP-DW4oc"
+    }
 
-print(response.text)
-response = requests.get(url)
-movie_dict = dict(response.json())
-print(movie_dict)
-print(type(movie_dict))
+    response = requests.get(url, headers=headers)
+    movie_dict = response.json()
+    return movie_dict
+
+print(get_movie_data(url))
+
+    # print(response.text)
+    # response = requests.get(url)
+    # movie_dict = dict(response.json())
+    # print(movie_dict)
+    # print(type(movie_dict))
+
+
+
+
+# my_key = config("MY_TMDB_API_KEY")
+
+# def get_movie_data(url):
+#     headers = {
+#     "accept": "application/json",
+#     "Authorization": f"Bearer {my_key}"
+# }
+#     coins = requests.get(url, headers=headers)
+#     jsonified = coins.json()
+#     return jsonified
+
+# print(get_movie_data(url))
 
 # movie_title = movie_dict
 # movie_category = movie_dict
